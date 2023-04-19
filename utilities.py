@@ -33,13 +33,14 @@ def select_rows_by_date(df, start_date_str, end_date_str):
 def select_rows_by_time(df, start_time, end_time):
     """
         Select time range from start time to end time\n
+        Front closed and back open intervals\n
         Time string format: HHMM
     """
     # Convert start_time and end_time to string format
     start_str = start_time[:2] + ':' + start_time[2:] + ':00'
     end_str = end_time[:2] + ':' + end_time[2:] + ':00'
     # Create boolean mask for selecting rows within time range
-    mask = (df.index.strftime('%H:%M:%S') >= start_str) & (df.index.strftime('%H:%M:%S') <= end_str)
+    mask = (df.index.strftime('%H:%M:%S') >= start_str) & (df.index.strftime('%H:%M:%S') < end_str)
     # Select rows within time range
     df_filtered = df.loc[mask]
     return df_filtered
@@ -75,7 +76,8 @@ def weekday_weekend_open_close_df(df):
     return weekday_df_open, weekday_df_close, weekend_df_open, weekend_df_close
 
 
-def monthly_plot(df, labels, title1='Monthly Data (separate)', title2='Overall Data'):
+def monthly_plot(df, labels, title1='Monthly Data (separate)', title2='Overall Data', left_axis='Value (kWh)',
+                 right_axis='Number of entries'):
 
     # group the data by month
     grouped = df.groupby(df.index.month)
@@ -108,7 +110,7 @@ def monthly_plot(df, labels, title1='Monthly Data (separate)', title2='Overall D
         ax.set_title('Month {}'.format(month))
         ax.set_xlabel('Date')
         if i % 4 == 0:
-            ax.set_ylabel('Value (kWh)', color='blue')
+            ax.set_ylabel(left_axis, color='blue')
         ax.set_ylim(min_val, max_val)
         ax.set_yticks(y_ticks)
         ax.set_yticklabels(y_tick_labels)
@@ -117,12 +119,12 @@ def monthly_plot(df, labels, title1='Monthly Data (separate)', title2='Overall D
             # Add a second y-axis for the second set of data
             ax2 = ax.twinx()
             # Plot the second set of data
-            data[df.columns.values[1]].plot(ax=ax2, color='orange', legend=False)
+            data[df.columns.values[1]].plot(ax=ax2, color='#FF8C00', legend=False)
             # Set the label for the second y-axis
             if i % 4 == 3:
-                ax2.set_ylabel('Number of entries', color='orange')
+                ax2.set_ylabel(right_axis, color='#FF8C00')
             # Set the y-axis limits
-            ax2.tick_params(axis='y', labelcolor='orange')
+            ax2.tick_params(axis='y', labelcolor='#FF8C00')
             ax2.set_ylim(min_val_2, max_val_2)
 
         # Set the x-axis format
@@ -142,15 +144,15 @@ def monthly_plot(df, labels, title1='Monthly Data (separate)', title2='Overall D
     plt.show()
 
     # Draw 1 chart for the whole year
-    fig, ax = plt.subplots(figsize=(25, 10))
+    fig, ax = plt.subplots(figsize=(40, 10))
     l1 = ax.plot(df[df.columns.values[0]], color='blue', label=labels[0])
     ax.set_xlabel('Date')
-    ax.set_ylabel('Value (kWh)', color='blue')
+    ax.set_ylabel(left_axis, color='blue')
     ax.tick_params(axis='y', labelcolor='blue')
     ax2 = ax.twinx()
-    l2 = ax2.plot(df[df.columns.values[1]], color='orange', label=labels[1])
-    ax2.set_ylabel('Number of entries', color='orange')
-    ax2.tick_params(axis='y', labelcolor='orange')
+    l2 = ax2.plot(df[df.columns.values[1]], color='#FF8C00', label=labels[1])
+    ax2.set_ylabel(right_axis, color='#FF8C00')
+    ax2.tick_params(axis='y', labelcolor='#FF8C00')
     # set legend
     ax.legend(l1 + l2, labels, loc=0)
     fig.suptitle(title2, fontsize=20)
@@ -228,7 +230,7 @@ def read_visit_file(file_path='Ethos Facility Door access.csv'):
             date = pd.to_datetime(row['Row Labels'], format='%d %B %Y')
             date_copy = date
             df_unique_entries.at[i, 'Row Labels'] = date
-            df_unique_entries.at[i, 'unique_entry'] = row['Sum of daily unique entries']
+            df_unique_entries.at[i, 'unique_entry'] = float(row['Sum of daily unique entries'])
             df.drop(index=i, inplace=True)
             # date_rows.append(i)
         except ValueError:
@@ -244,3 +246,8 @@ def read_visit_file(file_path='Ethos Facility Door access.csv'):
     df_unique_entries.set_index('Row Labels', inplace=True)
 
     return df, df_unique_entries
+
+
+def get_weekday_name(number):
+    weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    return weekdays[number]

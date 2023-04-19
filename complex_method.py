@@ -59,7 +59,6 @@ def replace_outliers(df):
     # df = df.clip(lower=acceptable_range[0], upper=acceptable_range[1], axis=1)
 
     # Replace outlier values with previous value
-    print(df)
     df[df > acceptable_range[1]] = np.nan
     # df.loc[df[DATA_COLUMN_NAME] > acceptable_range[1], DATA_COLUMN_NAME] = np.nan
     df = df.fillna(method='ffill')
