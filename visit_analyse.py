@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import matplotlib.pyplot as plt
+import numpy as np
 
 # -*- coding:utf-8 -*-
 # Author: HongchengXie (Patr1ck)
@@ -51,16 +52,22 @@ df_combined_2018_1day.index = df_2018_1day.index
 df_combined_2022_1day.index = df_2022_1day.index
 
 # print(df_combined_2018)
-df_combined_2018_1day[['unique_entry']] = df_combined_2018_1day[['unique_entry']].fillna(0)
-df_combined_2022_1day[['unique_entry']] = df_combined_2022_1day[['unique_entry']].fillna(0)
+# df_combined_2018_1day[['unique_entry']] = df_combined_2018_1day[['unique_entry']].fillna(0)
+# df_combined_2022_1day[['unique_entry']] = df_combined_2022_1day[['unique_entry']].fillna(0)
 
 # monthly_plot(df_combined_2018, ['2018 Electricity', 'Entries'])
 # monthly_plot(df_combined_2022, ['2022 Electricity', 'Entries'])
 
 monthly_plot(df_combined_2018_1day, ['2018 Electricity', 'Unique Entries'],
-             title1='2018 Electricity and Visitation Monthly Data', title2='2018 Electricity and Visitation Data')
+             title1='2018 Electricity and Visitation Monthly Data',
+             title2='2018 Electricity and Visitation Data',
+             y_ticks=np.linspace(0, 4000, num=5),
+             y_ticks_2=np.linspace(0, 1500, num=5))
 monthly_plot(df_combined_2022_1day, ['2022 Electricity', 'Unique Entries'],
-             title1='2022 Electricity and Visitation Monthly Data', title2='2022 Electricity and Visitation Data')
+             title1='2022 Electricity and Visitation Monthly Data',
+             title2='2022 Electricity and Visitation Data',
+             y_ticks=np.linspace(0, 4000, num=5),
+             y_ticks_2=np.linspace(0, 1500, num=5))
 
 # # 统计每周几人数最多 平均值
 # print(df_combined_2018_1day.index.weekday)
@@ -156,10 +163,10 @@ df_daily_pattern_combine = pd.concat([df_daily_pattern_2018, df_daily_pattern_20
 
 
 
-# calculate the correlation coefficient
-corr_coef_2018 = df_combined_2018_1day[DATA_COLUMN_NAME].astype('float64').corr(df_combined_2018_1day['unique_entry'].astype('float64'))
-corr_coef_2022 = df_combined_2022_1day[DATA_COLUMN_NAME].astype('float64').corr(df_combined_2022_1day['unique_entry'].astype('float64'))
-
-# Pearson correlation coefficient is a measure of the linear correlation between two variables and ranges from -1 to 1, with 1 indicating a perfect positive correlation, 0 indicating no correlation, and -1 indicating a perfect negative correlation.
-print('Correlation coefficient 2018:', corr_coef_2018)
-print('Correlation coefficient 2022:', corr_coef_2022)
+# # calculate the correlation coefficient
+# corr_coef_2018 = df_combined_2018_1day[DATA_COLUMN_NAME].astype('float64').corr(df_combined_2018_1day['unique_entry'].astype('float64'))
+# corr_coef_2022 = df_combined_2022_1day[DATA_COLUMN_NAME].astype('float64').corr(df_combined_2022_1day['unique_entry'].astype('float64'))
+#
+# # Pearson correlation coefficient is a measure of the linear correlation between two variables and ranges from -1 to 1, with 1 indicating a perfect positive correlation, 0 indicating no correlation, and -1 indicating a perfect negative correlation.
+# print('Correlation coefficient 2018:', corr_coef_2018)
+# print('Correlation coefficient 2022:', corr_coef_2022)

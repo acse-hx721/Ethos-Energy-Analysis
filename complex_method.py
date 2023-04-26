@@ -27,10 +27,10 @@ import statsmodels.api as sm
 TIME_INTERVAL = 30
 
 # File in different interval, remember to change
-DATA_FILE_NAME_2018 = 'Ethos_sigma_data_2018&2022/ethos_electricity/elec_2018_1h.csv'
-DATA_FILE_NAME_2022 = 'Ethos_sigma_data_2018&2022/ethos_electricity/elec_2022_1h.csv'
-DATA_FILE_NAME_2018_1day = 'Ethos_sigma_data_2018&2022/ethos_electricity/elec_2018_1day.csv'
-DATA_FILE_NAME_2022_1day = 'Ethos_sigma_data_2018&2022/ethos_electricity/elec_2022_1day.csv'
+DATA_FILE_NAME_2018 = 'Ethos_sigma_data/ethos_electricity/elec_2018_1h.csv'
+DATA_FILE_NAME_2022 = 'Ethos_sigma_data/ethos_electricity/elec_2022_1h.csv'
+DATA_FILE_NAME_2018_1day = 'Ethos_sigma_data/ethos_electricity/elec_2018_1day.csv'
+DATA_FILE_NAME_2022_1day = 'Ethos_sigma_data/ethos_electricity/elec_2022_1day.csv'
 
 
 DATA_COLUMN_NAME = 'sk-nor-101-sip1.ad.ic.ac.uk_Device_1'
@@ -62,6 +62,7 @@ def replace_outliers(df):
     df[df > acceptable_range[1]] = np.nan
     # df.loc[df[DATA_COLUMN_NAME] > acceptable_range[1], DATA_COLUMN_NAME] = np.nan
     df = df.fillna(method='ffill')
+    df.replace(0, np.nan, inplace=True)
 
     return df
 

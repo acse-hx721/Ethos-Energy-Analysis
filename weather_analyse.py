@@ -43,16 +43,21 @@ df_combined_2022 = df_2022_1day.join(weather_df_2022, how='left')
 monthly_plot(df_combined_2018, ['2018 Electricity', 'temperature'],
              title1='2018 Electricity and Temperature Monthly Data',
              title2='2018 Electricity and Temperature Data',
-             right_axis='Temperature (°C)')
+             right_axis='Temperature (°C)',
+             y_ticks=np.linspace(0, 4000, num=5),
+             y_ticks_2=np.linspace(-10, 40, num=5))
+
 monthly_plot(df_combined_2022, ['2022 Electricity', 'temperature'],
              title1='2022 Electricity and Temperature Monthly Data',
              title2='2022 Electricity and Temperature Data',
-             right_axis='Temperature (°C)')
+             right_axis='Temperature (°C)',
+             y_ticks=np.linspace(0, 4000, num=5),
+             y_ticks_2=np.linspace(-10, 40, num=5))
 
-# calculate the correlation coefficient
-corr_coef_2018 = df_combined_2018[DATA_COLUMN_NAME].corr(df_combined_2018['temp'])
-corr_coef_2022 = df_combined_2022[DATA_COLUMN_NAME].corr(df_combined_2022['temp'])
-print(df_combined_2018.dtypes)
-# Pearson correlation coefficient is a measure of the linear correlation between two variables and ranges from -1 to 1, with 1 indicating a perfect positive correlation, 0 indicating no correlation, and -1 indicating a perfect negative correlation.
-print('Correlation coefficient 2018:', corr_coef_2018)
-print('Correlation coefficient 2022:', corr_coef_2022)
+# # calculate the correlation coefficient
+# corr_coef_2018 = df_combined_2018[DATA_COLUMN_NAME].corr(df_combined_2018['temp'])
+# corr_coef_2022 = df_combined_2022[DATA_COLUMN_NAME].corr(df_combined_2022['temp'])
+
+# # Pearson correlation coefficient is a measure of the linear correlation between two variables and ranges from -1 to 1, with 1 indicating a perfect positive correlation, 0 indicating no correlation, and -1 indicating a perfect negative correlation.
+# print('Correlation coefficient 2018:', corr_coef_2018)
+# print('Correlation coefficient 2022:', corr_coef_2022)

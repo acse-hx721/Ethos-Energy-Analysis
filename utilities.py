@@ -77,7 +77,7 @@ def weekday_weekend_open_close_df(df):
 
 
 def monthly_plot(df, labels, title1='Monthly Data (separate)', title2='Overall Data', left_axis='Value (kWh)',
-                 right_axis='Number of entries'):
+                 right_axis='Number of entries', y_ticks=np.array([]), y_ticks_2=np.array([])):
 
     # group the data by month
     grouped = df.groupby(df.index.month)
@@ -85,8 +85,9 @@ def monthly_plot(df, labels, title1='Monthly Data (separate)', title2='Overall D
     max_val = int(df.max()[df.columns.values[0]] * 1.05)
     min_val = int(df.min()[df.columns.values[0]] * 0.95)
 
-    # Set the y-axis tick locations and labels
-    y_ticks = np.linspace(min_val, max_val, num=5)
+    if len(y_ticks) == 0:
+        # Set the y-axis tick locations and labels
+        y_ticks = np.linspace(min_val, max_val, num=5)
     if min_val > 100:
         y_tick_labels = [int(y/100)*100 for y in y_ticks]
     else:
@@ -96,7 +97,8 @@ def monthly_plot(df, labels, title1='Monthly Data (separate)', title2='Overall D
         # Calculate the maximum and minimum values for all months
         max_val_2 = int(df.max()[df.columns.values[1]] * 1.05)
         min_val_2 = int(df.min()[df.columns.values[1]] * 0.95)
-        y_ticks_2 = np.linspace(min_val_2, max_val_2, num=5)
+        if len(y_ticks) == 0:
+            y_ticks_2 = np.linspace(min_val_2, max_val_2, num=5)
         y_tick_labels_2 = [int(y) for y in y_ticks_2]
 
     # create subplots for each month's data
@@ -113,7 +115,7 @@ def monthly_plot(df, labels, title1='Monthly Data (separate)', title2='Overall D
             ax.set_ylabel(left_axis, color='blue')
         ax.set_ylim(min_val, max_val)
         ax.set_yticks(y_ticks)
-        ax.set_yticklabels(y_tick_labels)
+        # ax.set_yticklabels(y_tick_labels)
         ax.tick_params(axis='y', labelcolor='blue')
         if data.shape[1] == 2:
             # Add a second y-axis for the second set of data
@@ -126,6 +128,7 @@ def monthly_plot(df, labels, title1='Monthly Data (separate)', title2='Overall D
             # Set the y-axis limits
             ax2.tick_params(axis='y', labelcolor='#FF8C00')
             ax2.set_ylim(min_val_2, max_val_2)
+            ax2.set_yticks(y_ticks_2)
 
         # Set the x-axis format
         # ax.xaxis.set_major_locator(mdates.MonthLocator())
@@ -149,10 +152,12 @@ def monthly_plot(df, labels, title1='Monthly Data (separate)', title2='Overall D
     ax.set_xlabel('Date')
     ax.set_ylabel(left_axis, color='blue')
     ax.tick_params(axis='y', labelcolor='blue')
+    ax.set_yticks(y_ticks)
     ax2 = ax.twinx()
     l2 = ax2.plot(df[df.columns.values[1]], color='#FF8C00', label=labels[1])
     ax2.set_ylabel(right_axis, color='#FF8C00')
     ax2.tick_params(axis='y', labelcolor='#FF8C00')
+    ax2.set_yticks(y_ticks_2)
     # set legend
     ax.legend(l1 + l2, labels, loc=0)
     fig.suptitle(title2, fontsize=20)
@@ -222,7 +227,6 @@ def read_visit_file(file_path='Ethos Facility Door access.csv'):
     df = pd.read_csv(file_path, delimiter=';')
     df_unique_entries = pd.DataFrame(columns=['unique_entry'])
 
-
     # Parse dates and set as index
     date_rows = []
     for i, row in df.iterrows():
@@ -244,6 +248,8 @@ def read_visit_file(file_path='Ethos Facility Door access.csv'):
     df = df[:-1]
     df = df.rename(columns={'Sum of daily unique entries': 'entries'})
     df_unique_entries.set_index('Row Labels', inplace=True)
+    df.replace(0, np.nan, inplace=True)
+    df_unique_entries.replace(0, np.nan, inplace=True)
 
     return df, df_unique_entries
 
