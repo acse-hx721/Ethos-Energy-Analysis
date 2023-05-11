@@ -51,7 +51,7 @@ def replace_outliers(df):
     iqr = q3 - q1
 
     # Replace outliers with the maximum value within the acceptable range
-    acceptable_range = (0, q3 + 1.5 * iqr)
+    acceptable_range = (q1 - 1.5 * iqr, q3 + 1.5 * iqr)
     # print(df)
     # for i in range(1, len(df)):
     #     if df.iloc[i, 0] > acceptable_range[1]:
@@ -59,6 +59,7 @@ def replace_outliers(df):
     # df = df.clip(lower=acceptable_range[0], upper=acceptable_range[1], axis=1)
 
     # Replace outlier values with previous value
+    # df[df < acceptable_range[0]] = np.nan
     df[df > acceptable_range[1]] = np.nan
     # df.loc[df[DATA_COLUMN_NAME] > acceptable_range[1], DATA_COLUMN_NAME] = np.nan
     df = df.fillna(method='ffill')

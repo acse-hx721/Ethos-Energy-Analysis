@@ -13,6 +13,30 @@ import numpy as np
 # Print Dataframe setting options
 # pd.set_option('display.max_rows', None)
 # pd.set_option('display.max_columns', None)
+def interpolate_df_linear(df):
+
+
+    # interpolate missing values
+    df_interpolated = df.interpolate(method='linear')
+
+    # create a new figure with a specific size
+    plt.figure(figsize=(40, 10))  # width=40, height=10
+
+
+    # plot original data in blue and interpolated data in red
+    plt.plot(df_interpolated.index, df_interpolated.iloc[:, 0], color='red', label='Interpolated')
+    plt.plot(df.index, df.iloc[:, 0], color='blue', label='Original')
+
+    # set plot title and labels
+    plt.title('Interpolated Data')
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    plt.legend()
+
+    # show plot
+    plt.show()
+    return df_interpolated
+
 
 def select_rows_by_date(df, start_date_str, end_date_str):
     """

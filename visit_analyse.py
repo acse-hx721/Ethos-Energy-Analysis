@@ -18,12 +18,18 @@ pd.set_option('display.max_columns', None)
 df_2018 = pd.read_csv(DATA_FILE_NAME_2018, parse_dates=[['Date', 'Time']], index_col=0)
 df_2022 = pd.read_csv(DATA_FILE_NAME_2022, parse_dates=[['Date', 'Time']], index_col=0)
 
+# df_2018.plot()
+# df_2022.plot()
+
 df_2018_1day = pd.read_csv(DATA_FILE_NAME_2018_1day, parse_dates=[['Date', 'Time']], index_col=0)
 df_2022_1day = pd.read_csv(DATA_FILE_NAME_2022_1day, parse_dates=[['Date', 'Time']], index_col=0)
 
 # Pre-processing with nan, negative and the datetime format index
 df_2018 = data_preprocessing(df_2018)
 df_2022 = data_preprocessing(df_2022)
+
+df_2018 = interpolate_df_linear(df_2018)
+df_2022 = interpolate_df_linear(df_2022)
 
 # Some magic steps for data (when interval != 1day)...
 df_2018 = df_2018.iloc[:-1]
@@ -32,7 +38,8 @@ df_2022 = df_2022.iloc[:-1]
 # Pre-processing with nan, negative and the datetime format index
 df_2018_1day = data_preprocessing(df_2018_1day, is_1day=True)
 df_2022_1day = data_preprocessing(df_2022_1day, is_1day=True)
-
+df_2018_1day = interpolate_df_linear(df_2018_1day)
+df_2022_1day = interpolate_df_linear(df_2022_1day)
 
 # read the file of visitation
 df_entries, df_unique_entries = read_visit_file()
